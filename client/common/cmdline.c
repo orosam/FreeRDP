@@ -73,6 +73,7 @@ COMMAND_LINE_ARGUMENT_A args[] =
 	{ "gu", COMMAND_LINE_VALUE_REQUIRED, "[<domain>\\]<user> or <user>[@<domain>]", NULL, NULL, -1, NULL, "Gateway username" },
 	{ "gp", COMMAND_LINE_VALUE_REQUIRED, "<password>", NULL, NULL, -1, NULL, "Gateway password" },
 	{ "gd", COMMAND_LINE_VALUE_REQUIRED, "<domain>", NULL, NULL, -1, NULL, "Gateway domain" },
+	{ "gb", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueTrue, NULL, -1, NULL, "Bypass gateway for local addresses" },
 	{ "load-balance-info", COMMAND_LINE_VALUE_REQUIRED, "<info string>", NULL, NULL, -1, NULL, "Load balance info" },
 	{ "app", COMMAND_LINE_VALUE_REQUIRED, "<executable path> or <||alias>", NULL, NULL, -1, NULL, "Remote application program" },
 	{ "app-name", COMMAND_LINE_VALUE_REQUIRED, "<app name>", NULL, NULL, -1, NULL, "Remote application name for user interface" },
@@ -1389,7 +1390,6 @@ int freerdp_client_settings_parse_command_line_arguments(rdpSettings* settings, 
 
 			settings->GatewayUsageMethod = TSC_PROXY_MODE_DETECT;
 			settings->GatewayEnabled = TRUE;
-			settings->GatewayBypassLocal = TRUE;
 		}
 		CommandLineSwitchCase(arg, "gu")
 		{
@@ -1412,6 +1412,10 @@ int freerdp_client_settings_parse_command_line_arguments(rdpSettings* settings, 
 		{
 			settings->GatewayPassword = _strdup(arg->Value);
 			settings->GatewayUseSameCredentials = FALSE;
+		}
+		CommandLineSwitchCase(arg, "gb")
+		{
+			settings->GatewayBypassLocal = arg->Value ? TRUE : FALSE;
 		}
 		CommandLineSwitchCase(arg, "app")
 		{
